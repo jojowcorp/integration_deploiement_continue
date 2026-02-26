@@ -35,6 +35,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # ─── Build linux/amd64 ───────────────────────────────────────────────────
       - name: Build and push — linux/amd64
         uses: docker/build-push-action@v5
         with:
@@ -43,6 +44,21 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository }}:latest-amd64
 
+      # ─── Test linux/amd64 ────────────────────────────────────────────────────
+      - name: Test container — linux/amd64
+        run: |
+          EXPECTED=$(date "+%d %B %Y")
+          OUTPUT=$(docker run --rm --platform linux/amd64 ghcr.io/${{ github.repository }}:latest-amd64)
+          echo "Expected : $EXPECTED"
+          echo "Got      : $OUTPUT"
+          if [ "$OUTPUT" = "$EXPECTED" ]; then
+            echo "amd64 test passed!"
+          else
+            echo "amd64 test failed!"
+            exit 1
+          fi
+
+      # ─── Build linux/arm64 ───────────────────────────────────────────────────
       - name: Build and push — linux/arm64
         uses: docker/build-push-action@v5
         with:
@@ -50,3 +66,17 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: ghcr.io/${{ github.repository }}:latest-arm
+
+      # ─── Test linux/arm64 ────────────────────────────────────────────────────
+      - name: Test container — linux/arm64
+        run: |
+          EXPECTED=$(date "+%d %B %Y")
+          OUTPUT=$(docker run --rm --platform linux/arm64 ghcr.io/${{ github.repository }}:latest-arm)
+          echo "Expected : $EXPECTED"
+          echo "Got      : $OUTPUT"
+          if [ "$OUTPUT" = "$EXPECTED" ]; then
+            echo "arm64 test passed!"
+          else
+            echo "arm64 test failed!"
+            exit 1
+          fi
