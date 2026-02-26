@@ -3,7 +3,7 @@ name: Build Docker Image (Multi-Platform)
 on:
   pull_request:
     branches:
-      - trunk
+      - main
     types:
       - synchronize
       - opened
