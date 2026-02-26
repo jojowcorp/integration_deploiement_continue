@@ -14,4 +14,4 @@ COPY script.sh .
 RUN chmod +x script.sh
 
 # Execute the script when the container runs
-ENTRYPOINT ["bash", "script.sh"]
+ENTRYPOINT ["bash", "script.sh"]# test CI
